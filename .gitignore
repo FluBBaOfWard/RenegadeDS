@@ -1,0 +1,7 @@
+build
+include/renegade
+RenegadeDS.xcodeproj/project.xcworkspace/xcuserdata
+*.elf
+*.nds
+*.sav
+*.zip
