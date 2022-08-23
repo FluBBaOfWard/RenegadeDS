@@ -1,4 +1,4 @@
-# RenegadeDS V0.1.0
+# RenegadeDS V0.1.1
 
 This is a Renegade / Nekketsu Kouha Kunio-Kun - Arcade emulator for the NDS.
 No sound yet, you should still be able to enjoy the games though. =)
@@ -6,7 +6,7 @@ No sound yet, you should still be able to enjoy the games though. =)
 
 ## How to use:
 
-First DLDI patch the emulator for your flashcard.
+Depending on your flashcart you might have to DLDI patch the emulator.
 Create a folder named "acds" in either the root of your flash card or in the
 data folder. Now put renegade.zip and/or kuniokun.zip into a folder where you
 have arcade roms.

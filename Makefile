@@ -23,7 +23,7 @@ TARGET		:=	$(shell basename $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	source	\
 				source/Shared \
-				source/Shared/unzip \
+				source/Shared/Unzip \
 				source/ARM6502 \
 				source/ARM6809 \
 				source/RenegadeVideo

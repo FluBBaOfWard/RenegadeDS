@@ -4,6 +4,7 @@ RenegadeDS To do
 
 
 Misc:
+	Ram 0x2000-0x20FF is mirrored to 0x27FF! There are 64 sprites!
 	Test dipswitches.
 	Test player 2.
 
