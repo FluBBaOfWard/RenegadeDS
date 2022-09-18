@@ -61,8 +61,7 @@ reM6809End:
 ;@--------------------------------------
 	ldr m6502optbl,=m6502OpTable
 	ldr r0,m6502CyclesPerScanline
-	b m6502RestoreAndRunXCycles
-reM6502End:
+	bl m6502RestoreAndRunXCycles
 	add r0,m6502optbl,#m6502Regs
 	stmia r0,{m6502nz-m6502pc,m6502zpage}	;@ Save M6502 state
 ;@--------------------------------------
@@ -118,7 +117,7 @@ bneHack:		;@ BNE -4 (0xD0 0xFC), gameplay speed hack.
 skipBne:
 	fetch 2
 ;@----------------------------------------------------------------------------
-cpuReset:		;@ r0 = cyclesPerScanline, called by loadCart/resetGame
+cpuReset:		;@ Called by loadCart/resetGame
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
 
@@ -131,11 +130,7 @@ cpuReset:		;@ r0 = cyclesPerScanline, called by loadCart/resetGame
 	adr r4,cpuMapData
 	bl mapM6502Memory
 
-	adr r0,reM6502End
-	str r0,[m6502optbl,#m6502NextTimeout]
-	str r0,[m6502optbl,#m6502NextTimeout_]
-
-	mov r0,#0
+	mov r0,m6502optbl
 	bl m6502Reset
 
 //	adr r0,bneHack

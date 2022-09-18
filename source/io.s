@@ -168,7 +168,7 @@ IO_W:				;@ I/O write, 0x2000-0x3FFFF
 ;@----------------------------------------------------------------------------
 
 	cmp addy,#0x3200
-	bmi ram6502W
+	bmi ram6502IOW
 	subs r1,addy,#0x3800
 	ldrpl reptr,=reVideo_0
 	bpl reIOWrite
