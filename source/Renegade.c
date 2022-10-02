@@ -22,7 +22,7 @@ void unpackState(const void *statePtr) {
 	size += renegadeLoadState(&reVideo_0, statePtr+size);
 	size += mcuLoadState(statePtr+size);
 //	size += m6809LoadState(&m6809OpTable, statePtr+size);
-	m6502LoadState(&m6502OpTable, statePtr+size);
+	size += m6502LoadState(&m6502OpTable, statePtr+size);
 }
 
 int getStateSize() {
@@ -35,12 +35,12 @@ int getStateSize() {
 }
 
 static const ArcadeRom renegadeRoms[25] = {
-	// ROM_REGION( 0x10000, "maincpu", 0 ) /* 64k for code + bank switched ROM */
+	// ROM_REGION( 0x10000, "maincpu", 0 ) // 64k for code + bank switched ROM
 	{"na-5.ic52",   0x8000, 0xde7e7df4},
 	{"nb-5.ic51",   0x8000, 0xba683ddf},
 	// ROM_REGION( 0x10000, "audiocpu", 0 )
 	{"n0-5.ic13",   0x8000, 0x3587de3b},
-	// ROM_REGION( 0x0800, "mcu:mcu", 0 ) /* MC68705P5 */
+	// ROM_REGION( 0x0800, "mcu:mcu", 0 ) // MC68705P5
 //	{"nz-5.ic97",   0x0800, 0x32e47560},
 	// ROM_REGION( 0x08000, "chars", 0 )
 	{"nc-5.bin",    0x8000, 0x9adfaa5d},
@@ -71,7 +71,7 @@ static const ArcadeRom renegadeRoms[25] = {
 };
 
 static const ArcadeRom renegadebRoms[25] = {
-	// ROM_REGION( 0x10000, "maincpu", 0 ) /* 64k for code + bank switched ROM */
+	// ROM_REGION( 0x10000, "maincpu", 0 ) // 64k for code + bank switched ROM
 	{"na-5.ic52",   0x8000, 0xde7e7df4},
 	{"40.ic51",     0x8000, 0x3dbaac11},
 	// ROM_REGION( 0x10000, "audiocpu", 0 )
@@ -105,7 +105,7 @@ static const ArcadeRom renegadebRoms[25] = {
 };
 
 static const ArcadeRom kuniokunRoms[25] = {
-	// ROM_REGION( 0x10000, "maincpu", 0 ) /* 64k for code + bank switched ROM */
+	// ROM_REGION( 0x10000, "maincpu", 0 ) // 64k for code + bank switched ROM
 	{"ta18-11.bin", 0x8000, 0xf240f5cd},
 	{"nb-01.bin",   0x8000, 0x93fcfdf5},
 	// ROM_REGION( 0x10000, "audiocpu", 0 )
@@ -141,7 +141,7 @@ static const ArcadeRom kuniokunRoms[25] = {
 };
 
 static const ArcadeRom kuniokunbRoms[25] = {
-	// ROM_REGION( 0x10000, "maincpu", 0 ) /* 64k for code + bank switched ROM */
+	// ROM_REGION( 0x10000, "maincpu", 0 ) // 64k for code + bank switched ROM
 	{"ta18-11.bin", 0x8000, 0xf240f5cd},
 	{"ta18-10.bin", 0x8000, 0xa90cf44a},
 	// ROM_REGION( 0x10000, "audiocpu", 0 )
@@ -168,15 +168,15 @@ static const ArcadeRom kuniokunbRoms[25] = {
 	{"ta18-16.bin", 0x8000, 0x7244bad0},
 	{"ta18-21.bin", 0x8000, 0xc95e009b},
 	{"ta18-15.bin", 0x8000, 0xa5d61d01},
-	// ROM_REGION( 0x18000, "adpcm", 0 ) /* adpcm */
+	// ROM_REGION( 0x18000, "adpcm", 0 ) // adpcm
 	{"ta18-09.bin", 0x8000, 0x07ed4705},
 	{"ta18-08.bin", 0x8000, 0xc9312613},
 	{"ta18-07.bin", 0x8000, 0x02e3f3ed},
 };
 
-const ArcadeGame games[GAME_COUNT] = {
-	{"renegade",  "Renegade (US)", 25, renegadeRoms},
-	{"renegadeb", "Renegade (US bootleg)", 25, renegadebRoms},
-	{"kuniokun",  "Nekketsu Kouha Kunio-kun (Japan)", 25, kuniokunRoms},
-	{"kuniokunb", "Nekketsu Kouha Kunio-kun (Japan bootleg)", 25, kuniokunbRoms},
+const ArcadeGame renegadeGames[GAME_COUNT] = {
+	AC_GAME("renegade",  "Renegade (US)", renegadeRoms)
+	AC_GAME("renegadeb", "Renegade (US bootleg)", renegadebRoms)
+	AC_GAME("kuniokun",  "Nekketsu Kouha Kunio-kun (Japan)", kuniokunRoms)
+	AC_GAME("kuniokunb", "Nekketsu Kouha Kunio-kun (Japan bootleg)", kuniokunbRoms)
 };

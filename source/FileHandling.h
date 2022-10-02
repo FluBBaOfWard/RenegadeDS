@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "Renegade.h"
+
 #define FILEEXTENSIONS ".zip"
 
 int loadSettings(void);
@@ -14,7 +16,6 @@ void saveNVRAM(void);
 void loadState(void);
 void saveState(void);
 bool loadGame(int gameNr);
-bool loadRoms(int gameNr, bool doLoad);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -4,7 +4,8 @@ RenegadeDS To do
 
 
 Misc:
-	Ram 0x2000-0x20FF is mirrored to 0x27FF! There are 64 sprites!
+	Add real MCU emulation.
+	Ram 0x2000-0x21FF is mirrored to 0x27FF!
 	Test dipswitches.
 	Test player 2.
 

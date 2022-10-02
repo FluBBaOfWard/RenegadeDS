@@ -13,10 +13,10 @@
 
 	.global joyCfg
 	.global EMUinput
-	.global g_dipSwitch0
-	.global g_dipSwitch1
-	.global g_dipSwitch2
-	.global g_dipSwitch3
+	.global gDipSwitch0
+	.global gDipSwitch1
+	.global gDipSwitch2
+	.global gDipSwitch3
 	.global coinCounter0
 	.global coinCounter1
 
@@ -86,10 +86,10 @@ joy1State:	.byte 0
 joy2State:	.byte 0
 rlud2lrud:		.byte 0x00,0x02,0x01,0x03, 0x04,0x06,0x05,0x07, 0x08,0x0a,0x09,0x0b, 0x0c,0x0e,0x0d,0x0f
 rlud2lrud180:	.byte 0x00,0x01,0x02,0x03, 0x08,0x09,0x0a,0x0b, 0x04,0x05,0x06,0x07, 0x0c,0x0d,0x0e,0x0f
-g_dipSwitch0:	.byte 0
-g_dipSwitch1:	.byte 0x50		;@ Coins, lives, bonus, cabinet & flip.
-g_dipSwitch2:	.byte 0
-g_dipSwitch3:	.byte 0
+gDipSwitch0:	.byte 0
+gDipSwitch1:	.byte 0x50		;@ Coins, lives, bonus, cabinet & flip.
+gDipSwitch2:	.byte 0
+gDipSwitch3:	.byte 0
 coinCounter0:	.long 0
 coinCounter1:	.long 0
 
@@ -112,7 +112,7 @@ Input1_R:		;@ Player 2 + Coin
 ;@----------------------------------------------------------------------------
 Input2_R:		;@ Coins, Start & Service
 ;@----------------------------------------------------------------------------
-	ldrb r0,g_dipSwitch2
+	ldrb r0,gDipSwitch2
 	ldrb r1,joy2State
 	orr r0,r0,r1
 	eor r0,r0,#0x60				;@ why? MAME says ACTIVE_LOW...
@@ -121,19 +121,19 @@ Input2_R:		;@ Coins, Start & Service
 ;@----------------------------------------------------------------------------
 Input3_R:
 ;@----------------------------------------------------------------------------
-	ldrb r0,g_dipSwitch1
+	ldrb r0,gDipSwitch1
 	eor r0,r0,#0xFF
 	bx lr
 ;@----------------------------------------------------------------------------
 Input4_R:
 ;@----------------------------------------------------------------------------
-	ldrb r0,g_dipSwitch1
+	ldrb r0,gDipSwitch1
 //	eor r0,r0,#0xFF
 	bx lr
 ;@----------------------------------------------------------------------------
 Input5_R:
 ;@----------------------------------------------------------------------------
-	ldrb r0,g_dipSwitch2
+	ldrb r0,gDipSwitch2
 	eor r0,r0,#0xFF
 	bx lr
 
