@@ -6,8 +6,9 @@
 #include "ARM6809/ARM6809.i"
 #include "RenegadeVideo/RenegadeVideo.i"
 
-	.global cpuReset
 	.global run
+	.global stepFrame
+	.global cpuReset
 	.global frameTotal
 	.global waitMaskIn
 	.global waitMaskOut
@@ -21,7 +22,7 @@
 	.section .text
 	.align 2
 ;@----------------------------------------------------------------------------
-run:		;@ Return after 1 frame
+run:					;@ Return after 1 frame
 	.type   run STT_FUNC
 ;@----------------------------------------------------------------------------
 	ldrh r0,waitCountIn
@@ -54,8 +55,7 @@ reFrameLoop:
 ;@----------------------------------------------------------------------------
 	ldr m6809optbl,=m6809OpTable
 	ldr r0,m6809CyclesPerScanline
-	b m6809RestoreAndRunXCycles
-reM6809End:
+	bl m6809RestoreAndRunXCycles
 	add r0,m6809optbl,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}		;@ Save M6809 state
 ;@--------------------------------------
@@ -105,6 +105,37 @@ waitCountOut:		.byte 0
 waitMaskOut:		.byte 0
 
 ;@----------------------------------------------------------------------------
+stepFrame:					;@ Return after 1 frame
+	.type   stepFrame STT_FUNC
+;@----------------------------------------------------------------------------
+	stmfd sp!,{r4-r11,lr}
+;@----------------------------------------------------------------------------
+reStepLoop:
+;@----------------------------------------------------------------------------
+	ldr m6809optbl,=m6809OpTable
+	ldr r0,m6809CyclesPerScanline
+	bl m6809RestoreAndRunXCycles
+	add r0,m6809optbl,#m6809Regs
+	stmia r0,{m6809f-m6809pc,m6809sp}		;@ Save M6809 state
+;@--------------------------------------
+	ldr m6502optbl,=m6502OpTable
+	ldr r0,m6502CyclesPerScanline
+	bl m6502RestoreAndRunXCycles
+	add r0,m6502optbl,#m6502Regs
+	stmia r0,{m6502nz-m6502pc,m6502zpage}	;@ Save M6502 state
+;@--------------------------------------
+	ldr reptr,=reVideo_0
+	bl doScanline
+	cmp r0,#0
+	bne reStepLoop
+;@----------------------------------------------------------------------------
+	ldr r1,frameTotal
+	add r1,r1,#1
+	str r1,frameTotal
+
+	ldmfd sp!,{r4-r11,lr}
+	bx lr
+;@----------------------------------------------------------------------------
 bneHack:		;@ BNE -4 (0xD0 0xFC), gameplay speed hack.
 ;@----------------------------------------------------------------------------
 	ldrsb r0,[m6502pc],#1
@@ -146,11 +177,7 @@ cpuReset:		;@ Called by loadCart/resetGame
 	adr r4,cpuMapData+8
 	bl map6809Memory
 
-	adr r0,reM6809End
-	str r0,[m6809optbl,#m6809NextTimeout]
-	str r0,[m6809optbl,#m6809NextTimeout_]
-
-	mov r0,#0
+	mov r0,m6809optbl
 	bl m6809Reset
 
 	ldmfd sp!,{lr}
