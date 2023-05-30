@@ -55,7 +55,7 @@ scaleParms:					;@  NH     FH     NV     FV
 ;@----------------------------------------------------------------------------
 gfxReset:					;@ Called with CPU reset, r0 = selectedGame
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4,lr}
+	stmfd sp!,{lr}
 
 	ldr r0,=gfxState
 	mov r1,#5					;@ 5*4
@@ -91,7 +91,7 @@ gfxReset:					;@ Called with CPU reset, r0 = selectedGame
 	ldr r0,[r0]
 	str r0,[reptr,#spriteRomBase]
 
-	ldmfd sp!,{r4,pc}
+	ldmfd sp!,{pc}
 
 ;@----------------------------------------------------------------------------
 paletteInit:		;@ r0-r3 modified.

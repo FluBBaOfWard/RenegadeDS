@@ -6,15 +6,18 @@
 #include "ARM6809/ARM6809.i"
 #include "RenegadeVideo/RenegadeVideo.i"
 
+#define CYCLE_PSL (96)
+
 	.global run
 	.global stepFrame
+	.global cpuInit
 	.global cpuReset
 	.global frameTotal
 	.global waitMaskIn
 	.global waitMaskOut
 	.global soundCpuSetIRQ
 
-
+	.global m6502Base
 
 	.syntax unified
 	.arm
@@ -59,11 +62,11 @@ reFrameLoop:
 	add r0,m6809optbl,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}		;@ Save M6809 state
 ;@--------------------------------------
-	ldr m6502optbl,=m6502OpTable
+	ldr m6502ptr,=m6502Base
 	ldr r0,m6502CyclesPerScanline
 	bl m6502RestoreAndRunXCycles
-	add r0,m6502optbl,#m6502Regs
-	stmia r0,{m6502nz-m6502pc,m6502zpage}	;@ Save M6502 state
+	add r0,m6502ptr,#m6502Regs
+	stmia r0,{m6502nz-m6502pc}				;@ Save M6502 state
 ;@--------------------------------------
 	ldr reptr,=reVideo_0
 	bl doScanline
@@ -118,11 +121,11 @@ reStepLoop:
 	add r0,m6809optbl,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}		;@ Save M6809 state
 ;@--------------------------------------
-	ldr m6502optbl,=m6502OpTable
+	ldr m6502ptr,=m6502Base
 	ldr r0,m6502CyclesPerScanline
 	bl m6502RestoreAndRunXCycles
-	add r0,m6502optbl,#m6502Regs
-	stmia r0,{m6502nz-m6502pc,m6502zpage}	;@ Save M6502 state
+	add r0,m6502ptr,#m6502Regs
+	stmia r0,{m6502nz-m6502pc}				;@ Save M6502 state
 ;@--------------------------------------
 	ldr reptr,=reVideo_0
 	bl doScanline
@@ -148,28 +151,32 @@ bneHack:		;@ BNE -4 (0xD0 0xFC), gameplay speed hack.
 skipBne:
 	fetch 2
 ;@----------------------------------------------------------------------------
+cpuInit:
+	ldr r0,=m6502Base
+	b m6502Init
+;@----------------------------------------------------------------------------
 cpuReset:		;@ Called by loadCart/resetGame
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
 
 ;@---Speed - 1.5MHz / 60Hz / 272 lines		;Renegade M6502.
-	ldr r0,=96
+	ldr r0,=CYCLE_PSL
 	str r0,m6502CyclesPerScanline
 ;@--------------------------------------
-	ldr m6502optbl,=m6502OpTable
+	ldr m6502ptr,=m6502Base
 
 	adr r4,cpuMapData
 	bl mapM6502Memory
 
-	mov r0,m6502optbl
+	mov r0,m6502ptr
 	bl m6502Reset
 
 //	adr r0,bneHack
-//	str r0,[m6502optbl,#0xD0*4]
+//	str r0,[m6502ptr,#0xD0*4]
 	
 
 ;@---Speed - 1.5MHz / 60Hz / 272 lines		;Renegade M6809. 6MHz/4?
-	ldr r0,=96
+	ldr r0,=CYCLE_PSL
 	str r0,m6809CyclesPerScanline
 ;@--------------------------------------
 	ldr m6809optbl,=m6809OpTable
@@ -219,6 +226,17 @@ m6809DataLoop:
 	movs r5,r5,lsr#1
 	bne m6809DataLoop
 	ldmfd sp!,{pc}
+;@----------------------------------------------------------------------------
+#ifdef NDS
+	.section .dtcm, "ax", %progbits			;@ For the NDS
+#elif GBA
+	.section .iwram, "ax", %progbits		;@ For the GBA
+#else
+	.section .text
+#endif
+;@----------------------------------------------------------------------------
+m6502Base:
+	.space m6502Size
 ;@----------------------------------------------------------------------------
 	.end
 #endif // #ifdef __arm__

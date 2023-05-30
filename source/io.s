@@ -51,17 +51,15 @@ refreshEMUjoypads:			;@ Call every frame
 	tst r3,#0x400				;@ X
 	orrne r0,r0,#0x20			;@ Button 2 (jmp)
 //	tst r3,#0x02				;@ B
-//	orrne r0,r0,#0x08			;@ Button 3
 	tst r3,#0x01				;@ A
 	mov r3,#0
-	orrne r3,r3,#0x04			;@ Button 4 (atk right)
+	orrne r3,r3,#0x04			;@ Button 3 (atk right)
 
 	mov r1,#0
 	tst r4,#0x4					;@ Select
 	orrne r1,r1,#0x40			;@ Coin 1
 	tst r4,#0x8					;@ Start
 	orrne r1,r1,#0x4000			;@ Start 1
-//	orrne r1,r1,#0x20			;@ Coin 2
 	tst r2,#0x20000000			;@ Player2?
 	mov r2,#0
 	movne r1,r1,lsl#1
@@ -73,7 +71,7 @@ refreshEMUjoypads:			;@ Call every frame
 
 	strb r0,joy0State
 	strb r2,joy1State
-	and r3,r3,#0x0C				;@ attack right, P1/P2
+	and r3,r3,#0x0C				;@ Attack right, P1/P2
 	strb r3,joy2State
 	bx lr
 
@@ -110,30 +108,17 @@ Input1_R:		;@ Player 2 + Coin
 	eor r0,r0,#0xFF
 	bx lr
 ;@----------------------------------------------------------------------------
-Input2_R:		;@ Coins, Start & Service
+Input2_R:		;@ Coin setting, Service, mcu, VBlank & attack right.
 ;@----------------------------------------------------------------------------
 	ldrb r0,gDipSwitch2
 	ldrb r1,joy2State
 	orr r0,r0,r1
-	eor r0,r0,#0x60				;@ why? MAME says ACTIVE_LOW...
-	eor r0,r0,#0xFF
+	eor r0,r0,#0x9F
 	bx lr
 ;@----------------------------------------------------------------------------
 Input3_R:
 ;@----------------------------------------------------------------------------
 	ldrb r0,gDipSwitch1
-	eor r0,r0,#0xFF
-	bx lr
-;@----------------------------------------------------------------------------
-Input4_R:
-;@----------------------------------------------------------------------------
-	ldrb r0,gDipSwitch1
-//	eor r0,r0,#0xFF
-	bx lr
-;@----------------------------------------------------------------------------
-Input5_R:
-;@----------------------------------------------------------------------------
-	ldrb r0,gDipSwitch2
 	eor r0,r0,#0xFF
 	bx lr
 
