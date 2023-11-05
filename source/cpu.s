@@ -18,6 +18,7 @@
 	.global soundCpuSetIRQ
 
 	.global m6502Base
+	.global m6809CPU0
 
 	.syntax unified
 	.arm
@@ -56,10 +57,10 @@ runStart:
 ;@----------------------------------------------------------------------------
 reFrameLoop:
 ;@----------------------------------------------------------------------------
-	ldr m6809optbl,=m6809OpTable
+	ldr m6809ptr,=m6809CPU0
 	ldr r0,m6809CyclesPerScanline
 	bl m6809RestoreAndRunXCycles
-	add r0,m6809optbl,#m6809Regs
+	add r0,m6809ptr,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}		;@ Save M6809 state
 ;@--------------------------------------
 	ldr m6502ptr,=m6502Base
@@ -94,10 +95,10 @@ reFrameLoop:
 ;@----------------------------------------------------------------------------
 soundCpuSetIRQ:					;@ Sound latch write/read
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{m6809optbl,lr}
-	ldr m6809optbl,=m6809OpTable
+	stmfd sp!,{m6809ptr,lr}
+	ldr m6809ptr,=m6809CPU0
 	bl m6809SetIRQPin
-	ldmfd sp!,{m6809optbl,pc}
+	ldmfd sp!,{m6809ptr,pc}
 ;@----------------------------------------------------------------------------
 m6502CyclesPerScanline:	.long 0
 m6809CyclesPerScanline:	.long 0
@@ -115,10 +116,10 @@ stepFrame:					;@ Return after 1 frame
 ;@----------------------------------------------------------------------------
 reStepLoop:
 ;@----------------------------------------------------------------------------
-	ldr m6809optbl,=m6809OpTable
+	ldr m6809ptr,=m6809CPU0
 	ldr r0,m6809CyclesPerScanline
 	bl m6809RestoreAndRunXCycles
-	add r0,m6809optbl,#m6809Regs
+	add r0,m6809ptr,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}		;@ Save M6809 state
 ;@--------------------------------------
 	ldr m6502ptr,=m6502Base
@@ -152,8 +153,13 @@ skipBne:
 	fetch 2
 ;@----------------------------------------------------------------------------
 cpuInit:
+	stmfd sp!,{lr}
 	ldr r0,=m6502Base
-	b m6502Init
+	bl m6502Init
+	ldr r0,=m6809CPU0
+	bl m6809Init
+	ldmfd sp!,{lr}
+	bx lr
 ;@----------------------------------------------------------------------------
 cpuReset:		;@ Called by loadCart/resetGame
 ;@----------------------------------------------------------------------------
@@ -171,20 +177,21 @@ cpuReset:		;@ Called by loadCart/resetGame
 	mov r0,m6502ptr
 	bl m6502Reset
 
-//	adr r0,bneHack
-//	str r0,[m6502ptr,#0xD0*4]
-	
+//	mov r0,m6502ptr
+//	mov r1,#0xD0
+//	adr r2,bneHack
+//	bl m6502PatchOpcode
 
 ;@---Speed - 1.5MHz / 60Hz / 272 lines		;Renegade M6809. 6MHz/4?
 	ldr r0,=CYCLE_PSL
 	str r0,m6809CyclesPerScanline
 ;@--------------------------------------
-	ldr m6809optbl,=m6809OpTable
+	ldr m6809ptr,=m6809CPU0
 
 	adr r4,cpuMapData+8
 	bl map6809Memory
 
-	mov r0,m6809optbl
+	mov r0,m6809ptr
 	bl m6809Reset
 
 	ldmfd sp!,{lr}
@@ -231,12 +238,13 @@ m6809DataLoop:
 	.section .dtcm, "ax", %progbits			;@ For the NDS
 #elif GBA
 	.section .iwram, "ax", %progbits		;@ For the GBA
-#else
-	.section .text
 #endif
+	.align 2
 ;@----------------------------------------------------------------------------
 m6502Base:
 	.space m6502Size
+m6809CPU0:
+	.space m6809Size
 ;@----------------------------------------------------------------------------
 	.end
 #endif // #ifdef __arm__

@@ -10,6 +10,7 @@
 		35E683AD1C66453300FCFE8A /* cpu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpu.h; sourceTree = "<group>"; };
 		35E683AF1C664A6D00FCFE8A /* io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
 		746D78E114ED9A8400CC738F /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; path = Makefile; sourceTree = "<group>"; };
+		9C11629A2AF7A567003C92C0 /* EmuMenu.i */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c.preprocessed; path = EmuMenu.i; sourceTree = "<group>"; };
 		9C1A754C28DA4105005F342E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C1A754D28DA46EC005F342E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C1A754E28DA4A7F005F342E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -196,6 +197,7 @@
 				A47F095D2087BFC0004E1DA6 /* Unzip */,
 				9C8F3400248ACB7600996E5A /* nds_asm.h */,
 				9CBEE0E026EE99C50095347A /* EmuSettings.h */,
+				9C11629A2AF7A567003C92C0 /* EmuMenu.i */,
 				A47F092820863384004E1DA6 /* EmuMenu.h */,
 				A47F092920863384004E1DA6 /* EmuMenu.c */,
 				A47F09642087BFC0004E1DA6 /* FileHelper.h */,

@@ -75,6 +75,6 @@ The MAME team for information about the hardware.
 
 
 Fredrik Ahlström
-Twitter @TheRealFluBBa
-http://www.github.com/FluBBaOfWard
+X/Twitter @TheRealFluBBa
+https://www.github.com/FluBBaOfWard
 

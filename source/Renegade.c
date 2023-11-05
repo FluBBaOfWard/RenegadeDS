@@ -13,7 +13,7 @@ int packState(void *statePtr) {
 	int size = 0;
 	size += renegadeSaveState(statePtr+size, &reVideo_0);
 	size += mcuSaveState(statePtr+size);
-//	size += m6809SaveState(statePtr+size, &m6809OpTable);
+//	size += m6809SaveState(statePtr+size, &m6809CPU0);
 	size += m6502SaveState(statePtr+size, &m6502Base);
 	return size;
 }
@@ -22,7 +22,7 @@ void unpackState(const void *statePtr) {
 	int size = 0;
 	size += renegadeLoadState(&reVideo_0, statePtr+size);
 	size += mcuLoadState(statePtr+size);
-//	size += m6809LoadState(&m6809OpTable, statePtr+size);
+//	size += m6809LoadState(&m6809CPU0, statePtr+size);
 	size += m6502LoadState(&m6502Base, statePtr+size);
 }
 
