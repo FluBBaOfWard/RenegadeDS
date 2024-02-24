@@ -14,10 +14,6 @@
 #include "io.h"
 #include "Sound.h"
 
-//#define sample_rate 32768
-#define sample_rate 55930
-#define buffer_size (512+10)
-
 static void checkTimeOut(void);
 static void setupGraphics(void);
 static void setupStream(void);
@@ -65,12 +61,12 @@ int main(int argc, char **argv) {
 	irqSet(IRQ_VBLANK, myVblank);
 	setupGUI();
 	getInput();
-	loadCart(0,0);
 	if ( initFileHelper() ) {
 		loadSettings();
 		autoLoadGame();
 	}
 	else {
+		loadCart(0,0);
 		drawText("fatInitDefault() failure.",23,0);
 	}
 
@@ -88,8 +84,9 @@ int main(int argc, char **argv) {
 //---------------------------------------------------------------------------------
 void pausVBlank(int count) {
 //---------------------------------------------------------------------------------
-	while (--count)
+	while (--count) {
 		waitVBlank();
+	}
 }
 
 //---------------------------------------------------------------------------------

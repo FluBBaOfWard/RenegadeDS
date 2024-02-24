@@ -16,6 +16,9 @@
 //	.global scaling
 	.global cartFlags
 	.global romStart
+	.global mainCpu
+	.global soundCpu
+	.global mcuBase
 	.global vromBase0
 	.global vromBase1
 	.global vromBase2
@@ -170,22 +173,19 @@ loadCart: 		;@ Called from C:  r0=rom number, r1=emuFlags
 	mov r11,r0
 
 //	ldr r3,=rawRom
-	ldr r3,=ROM_Space
-
-
-								;@ r3=romBase til end of loadcart so DON'T FUCK IT UP
-	str r3,romStart				;@ Set rom base
-	add r0,r3,#0x10000			;@ 0x10000
-	str r0,cpu2Base				;@ Sound cpu rom
-	add r0,r0,#0x8000			;@ 0x8000
+	ldr r3,=ROM_Space			;@ r3=romBase til end of loadcart so DON'T FUCK IT UP
+//	str r3,romStart				;@ Set rom base
+//	add r0,r3,#0x10000			;@ 0x10000
+//	str r0,soundCpu				;@ Sound cpu rom
+//	add r0,r0,#0x8000			;@ 0x8000
 //	add r0,r0,#0x0800			;@ mcu rom 0x0800
-	str r0,vromBase0			;@ Chars
-	add r0,r0,#0x8000
-	str r0,vromBase1			;@ Tiles
-	add r0,r0,#0x30000
-	str r0,vromBase2			;@ Sprites
-	add r0,r0,#0x60000
-	str r0,adpcmBase			;@ ADPCM data 0x18000 (0x20000)
+//	str r0,vromBase0			;@ Chars
+//	add r0,r0,#0x8000
+//	str r0,vromBase1			;@ Tiles
+//	add r0,r0,#0x30000
+//	str r0,vromBase2			;@ Sprites
+//	add r0,r0,#0x60000
+//	str r0,adpcmBase			;@ ADPCM data 0x18000 (0x20000)
 
 	ldr r4,=MEMMAPTBL_
 	ldr r5,=RDMEMTBL_
@@ -362,8 +362,11 @@ cartFlags:
 	.space 3
 
 romStart:
+mainCpu:
 	.long 0
-cpu2Base:
+soundCpu:
+	.long 0
+mcuBase:
 	.long 0
 vromBase0:
 	.long 0

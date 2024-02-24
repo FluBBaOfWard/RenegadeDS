@@ -7,6 +7,10 @@ extern "C" {
 
 #include <maxmod9.h>
 
+//#define sample_rate 32768
+#define sample_rate 55930
+#define buffer_size (512+10)
+
 void soundInit(void);
 void soundSetFrequency(void);
 void setMuteSoundGUI(void);

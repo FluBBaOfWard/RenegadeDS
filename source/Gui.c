@@ -14,7 +14,7 @@
 #include "ARM6809/Version.h"
 #include "RenegadeVideo/Version.h"
 
-#define EMUVERSION "V0.1.1 2023-11-05"
+#define EMUVERSION "V0.1.1 2024-02-24"
 
 static void uiDebug(void);
 
