@@ -35,7 +35,7 @@
 	.arm
 
 	.section .rodata
-	.align 2
+	.align 8
 
 rawRom:
 /*
@@ -379,6 +379,7 @@ adpcmBase:
 	.pool
 
 	.section .bss
+	.align 8
 WRMEMTBL_:
 	.space 256*4
 RDMEMTBL_:
