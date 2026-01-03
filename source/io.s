@@ -1,17 +1,8 @@
-
 #ifdef __arm__
 
 #include "ARM6502/M6502.i"
 #include "RenegadeVideo/RenegadeVideo.i"
 #include "Shared/EmuMenu.i"
-
-	.global ioReset
-	.global IO_R
-	.global IO_W
-	.global soundIO_R
-	.global soundIO_W
-	.global convertInput
-	.global refreshEMUjoypads
 
 	.global joyCfg
 	.global EMUinput
@@ -22,10 +13,22 @@
 	.global coinCounter0
 	.global coinCounter1
 
+	.global ioReset
+	.global refreshEMUjoypads
+	.global IO_R
+	.global IO_W
+	.global soundIO_R
+	.global soundIO_W
+	.global convertInput
+
 	.syntax unified
 	.arm
 
-	.section .text
+#ifdef GBA
+	.section .ewram, "ax", %progbits	;@ For the GBA
+#else
+	.section .text						;@ For anything else
+#endif
 	.align 2
 ;@----------------------------------------------------------------------------
 ioReset:

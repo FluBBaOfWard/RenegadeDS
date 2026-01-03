@@ -5,8 +5,6 @@
 extern "C" {
 #endif
 
-#include "Renegade.h"
-
 #define FILEEXTENSIONS ".zip"
 
 int loadSettings(void);

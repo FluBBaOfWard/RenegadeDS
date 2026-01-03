@@ -23,7 +23,11 @@
 	.syntax unified
 	.arm
 
-	.section .text
+#ifdef GBA
+	.section .ewram, "ax", %progbits	;@ For the GBA
+#else
+	.section .text						;@ For anything else
+#endif
 	.align 2
 ;@----------------------------------------------------------------------------
 run:					;@ Return after 1 frame
@@ -235,9 +239,11 @@ m6809DataLoop:
 	ldmfd sp!,{pc}
 ;@----------------------------------------------------------------------------
 #ifdef NDS
-	.section .dtcm, "ax", %progbits			;@ For the NDS
+	.section .sbss				;@ This is DTCM on NDS with devkitARM
 #elif GBA
-	.section .iwram, "ax", %progbits		;@ For the GBA
+	.section .bss				;@ This is IWRAM on GBA with devkitARM
+#else
+	.section .bss
 #endif
 	.align 2
 ;@----------------------------------------------------------------------------

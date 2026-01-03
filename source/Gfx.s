@@ -4,30 +4,33 @@
 #include "Shared/EmuSettings.h"
 #include "RenegadeVideo/RenegadeVideo.i"
 
+	.global gFlicker
+	.global gTwitch
+	.global gScaling
+	.global gGfxMask
+	.global yStart
+	.global gfxState
+//	.global oamBufferReady
+	.global EMUPALBUFF
+	.global reVideo_0
+
 	.global gfxInit
 	.global gfxReset
 	.global paletteInit
 	.global paletteTxAll
 	.global refreshGfx
 	.global endFrame
-	.global gfxState
-//	.global oamBufferReady
-	.global gFlicker
-	.global gTwitch
-	.global gScaling
-	.global gGfxMask
 	.global vblIrqHandler
-	.global yStart
-	.global EMUPALBUFF
-
-	.global reVideo_0
-
 
 
 	.syntax unified
 	.arm
 
-	.section .text
+#ifdef GBA
+	.section .ewram, "ax", %progbits	;@ For the GBA
+#else
+	.section .text						;@ For anything else
+#endif
 	.align 2
 ;@----------------------------------------------------------------------------
 gfxInit:					;@ Called from machineInit
@@ -51,7 +54,7 @@ gfxInit:					;@ Called from machineInit
 
 ;@----------------------------------------------------------------------------
 scaleParms:					;@  NH     FH     NV     FV
-	.long OAM_BUFFER1,0x0000,0x0100,0xff01,0x0120,0xfeb6
+	.long OAM_BUFFER1,0x0000,0x0100,0xff01,0x0120,0xfee6
 ;@----------------------------------------------------------------------------
 gfxReset:					;@ Called with CPU reset, r0 = selectedGame
 ;@----------------------------------------------------------------------------
@@ -145,25 +148,25 @@ paletteTxAll:				;@ Called from ui.c
 	.type paletteTxAll STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r9,lr}
-	ldr r4,=0x1FFE			;@ Mask
+	ldr r4,=0x1FFE				;@ Mask
 	ldr r2,=EMU_RAM+0x3000
 	add r3,r2,#0x100
 	ldr r7,=MAPPED_RGB
 	ldr r5,=EMUPALBUFF
 
-	mov r6,#0				;@ Source, FG
-	mov r8,#128*2			;@ Destination
-	mov r9,#8*4				;@ Len
+	mov r6,#0					;@ Source, FG
+	mov r8,#128*2				;@ Destination
+	mov r9,#8*4					;@ Len
 	bl PalCpy
 
-	mov r6,#192*2			;@ Source, BG
-	mov r8,#0				;@ Destination
-	mov r9,#8*8				;@ Len
+	mov r6,#192*2				;@ Source, BG
+	mov r8,#0					;@ Destination
+	mov r9,#8*8					;@ Len
 	bl PalCpy
 
-	mov r6,#128*2			;@ Source, Spr
-	mov r8,#256*2			;@ Destination
-	mov r9,#8*4				;@ Len
+	mov r6,#128*2				;@ Source, Spr
+	mov r8,#256*2				;@ Destination
+	mov r9,#8*4					;@ Len
 	bl PalCpy
 
 	ldmfd sp!,{r4-r9,lr}
@@ -171,12 +174,12 @@ paletteTxAll:				;@ Called from ui.c
 
 ;@----------------------------------------------------------------------------
 PalCpy:
-	ldrb r0,[r2,r6,lsr#1]	;@ Source GR
-	ldrb r1,[r3,r6,lsr#1]	;@ Source B
+	ldrb r0,[r2,r6,lsr#1]		;@ Source GR
+	ldrb r1,[r3,r6,lsr#1]		;@ Source B
 	orr r0,r0,r1,lsl#8
 	and r0,r4,r0,lsl#1
-	ldrh r0,[r7,r0]			;@ Palette LUT
-	strh r0,[r5,r8]			;@ Destination
+	ldrh r0,[r7,r0]				;@ Palette LUT
+	strh r0,[r5,r8]				;@ Destination
 	add r6,r6,#2
 	add r8,r8,#2
 	tst r8,#0x10
@@ -189,73 +192,72 @@ PalCpy:
 vblIrqHandler:
 	.type vblIrqHandler STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4-r11,lr}
+	stmfd sp!,{r4-r6,lr}
 	bl calculateFPS
 
 	ldrb r0,gScaling
 	cmp r0,#UNSCALED
-	moveq r6,#0
-	ldrne r6,=0x80000000 + ((GAME_HEIGHT-SCREEN_HEIGHT)*0x10000) / (SCREEN_HEIGHT-1)		;@ NDS 0x2B10 (was 0x2AAB)
-	ldrbeq r8,yStart
-	movne r8,#0
-	add r8,r8,#0x08
-	mov r7,r8,lsl#16
-	orr r7,r7,#(GAME_WIDTH-SCREEN_WIDTH)/2
+	moveq r5,#0
+	ldrne r5,=0x80000000 + ((GAME_HEIGHT-SCREEN_HEIGHT)*0x10000) / (SCREEN_HEIGHT-1)		;@ NDS 0x2B10 (was 0x2AAB)
+	ldrbeq r4,yStart
+	movne r4,#0
+	add r4,r4,#0x08
+	mov r2,r4,lsl#16
+	orr r2,r2,#(GAME_WIDTH-SCREEN_WIDTH)/2
 
 	ldr r0,gFlicker
 	eors r0,r0,r0,lsl#31
 	str r0,gFlicker
-	addpl r6,r6,r6,lsl#16
+	addpl r5,r5,r5,lsl#16
 
-	ldr r11,=scrollBuff
-	mov r4,r11
+	ldr r1,=scrollBuff
+	mov r0,r1
 
-	ldr r5,=scrollTemp
+	ldr r6,=scrollTemp
 	mov r12,#SCREEN_HEIGHT
 scrolLoop2:
-	ldr r1,[r5,r8,lsl#2]
-	add r0,r7,#0
-	add r1,r1,r7
-	stmia r4!,{r0-r1}
-	adds r6,r6,r6,lsl#16
-	addcs r7,r7,#0x10000
-	adc r8,r8,#1
+	ldr r3,[r6,r4,lsl#2]
+	add r3,r3,r2
+	stmia r0!,{r2-r3}
+	adds r5,r5,r5,lsl#16
+	addcs r2,r2,#0x10000
+	adc r4,r4,#1
 	subs r12,r12,#1
 	bne scrolLoop2
 
 
-	mov r8,#REG_BASE
-	strh r8,[r8,#REG_DMA0CNT_H]	;@ DMA0 stop
+	mov r5,#REG_BASE
+	strh r5,[r5,#REG_DMA0CNT_H]	;@ DMA0 stop
 
-	add r0,r8,#REG_DMA0SAD
-	mov r1,r11					;@ Setup DMA buffer for scrolling:
+	add r0,r5,#REG_DMA0SAD
+//	mov r1,r1					;@ DMA0 src, scrolling:
 	ldmia r1!,{r3-r4}			;@ Read
-	add r2,r8,#REG_BG0HOFS		;@ DMA0 always goes here
+	add r2,r5,#REG_BG0HOFS		;@ DMA0 dst
 	stmia r2,{r3-r4}			;@ Set 1st value manually, HBL is AFTER 1st line
 	ldr r3,=0x96600002			;@ noIRQ hblank 32bit repeat incsrc inc_reloaddst, 2 word
 	stmia r0,{r1-r3}			;@ DMA0 go
 
-	add r1,r8,#REG_DMA3SAD
+	add r0,r5,#REG_DMA3SAD
 
-	ldr r2,dmaOamBuffer			;@ DMA3 src, OAM transfer:
-	mov r3,#OAM					;@ DMA3 dst
-	mov r4,#0x84000000			;@ noIRQ 32bit incsrc incdst
-	orr r4,r4,#96*2				;@ 96 sprites * 2 longwords
-	stmia r1,{r2-r4}			;@ DMA3 go
+	ldr r1,dmaOamBuffer			;@ DMA3 src, OAM transfer:
+	mov r2,#OAM					;@ DMA3 dst
+	mov r3,#0x84000000			;@ noIRQ 32bit incsrc incdst
+	orr r3,r3,#96*2				;@ 96 sprites * 2 longwords
+	stmia r0,{r1-r3}			;@ DMA3 go
 
-	ldr r2,=EMUPALBUFF			;@ DMA3 src, Palette transfer:
-	mov r3,#BG_PALETTE			;@ DMA3 dst
-	mov r4,#0x84000000			;@ noIRQ 32bit incsrc incdst
-	orr r4,r4,#0x100			;@ 256 words (1024 bytes)
-	stmia r1,{r2-r4}			;@ DMA3 go
+	ldr r1,=EMUPALBUFF			;@ DMA3 src, Palette transfer:
+	mov r2,#BG_PALETTE			;@ DMA3 dst
+	mov r3,#0x84000000			;@ noIRQ 32bit incsrc incdst
+	orr r3,r3,#0x100			;@ 256 words (1024 bytes)
+	stmia r0,{r1-r3}			;@ DMA3 go
 
 	mov r0,#0x0013
 	ldrb r1,gGfxMask
 	bic r0,r0,r1
-	strh r0,[r8,#REG_WININ]
+	strh r0,[r5,#REG_WININ]
 
 	blx scanKeys
-	ldmfd sp!,{r4-r11,pc}
+	ldmfd sp!,{r4-r6,pc}
 
 
 ;@----------------------------------------------------------------------------
@@ -263,7 +265,7 @@ gFlicker:		.byte 1
 				.space 2
 gTwitch:		.byte 0
 
-gScaling:		.byte 1
+gScaling:		.byte SCALED
 gGfxMask:		.byte 0
 yStart:			.byte 0
 				.byte 0
@@ -280,13 +282,13 @@ endFrame:					;@ Called just before screen end (~line 224)	(r0-r2 safe to use)
 	ldr r0,=scrollTemp
 	bl copyScrollValues
 
-endFrameRE:
 	ldr r0,=BG_GFX
 	bl convertChrTileMap
 	ldr r0,=BG_GFX+0x1000
 	bl convertBgrTileMap
 	ldr r0,tmpOamBuffer
 	bl convertSpritesRenegade
+
 	bl paletteTxAll
 ;@--------------------------
 	ldr r0,dmaOamBuffer
@@ -318,15 +320,18 @@ gfxState:
 adjustBlend:
 	.long 0
 windowTop:
-	.long 0
-wTop:
-	.long 0,0,0		;@ windowtop  (this label too)   L/R scrolling in unscaled mode
+	.long 0,0,0,0				;@ L/R scrolling in unscaled mode
 
 	.byte 0
 	.byte 0
 	.byte 0,0
 
+#ifdef GBA
+	.section .sbss				;@ This is EWRAM on GBA with devkitARM
+#else
 	.section .bss
+#endif
+	.align 2
 scrollTemp:
 	.space 0x400*2
 OAM_BUFFER1:

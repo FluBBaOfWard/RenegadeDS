@@ -10,6 +10,7 @@ Misc:
 	Test player 2.
 
 Graphic:
+	Fix periodic IRQ.
 
 CPU:
 	Add audio cpu (6809).

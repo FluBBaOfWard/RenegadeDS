@@ -1,4 +1,3 @@
-
 #ifdef __arm__
 
 #include "Shared/EmuSettings.h"
@@ -6,14 +5,8 @@
 #include "ARM6809/ARM6809.i"
 #include "RenegadeVideo/RenegadeVideo.i"
 
-	.global machineInit
-	.global loadCart
-	.global m6502Mapper
-	.global m6809Mapper
-	.global m6502Mapper0
 	.global romNum
 	.global emuFlags
-//	.global scaling
 	.global cartFlags
 	.global romStart
 	.global mainCpu
@@ -29,6 +22,11 @@
 	.global EMU_RAM
 	.global ROM_Space
 
+	.global machineInit
+	.global loadCart
+	.global m6502Mapper
+	.global m6809Mapper
+	.global m6502Mapper0
 
 
 	.syntax unified
@@ -256,11 +254,6 @@ tbLoop3:
 
 	ldmfd sp!,{r4-r11,lr}
 	bx lr
-
-;@----------------------------------------------------------------------------
-//	.section itcm
-;@----------------------------------------------------------------------------
-
 ;@----------------------------------------------------------------------------
 m6502Mapper0:
 ;@----------------------------------------------------------------------------
@@ -378,7 +371,11 @@ adpcmBase:
 	.long 0
 	.pool
 
+#ifdef GBA
+	.section .sbss				;@ This is EWRAM on GBA with devkitARM
+#else
 	.section .bss
+#endif
 	.align 8
 WRMEMTBL_:
 	.space 256*4

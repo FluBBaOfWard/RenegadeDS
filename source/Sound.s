@@ -1,7 +1,8 @@
-
 #ifdef __arm__
 
 #include "YM3526/YM3526.i"
+
+	.extern pauseEmulation
 
 	.global soundInit
 	.global soundReset
@@ -12,15 +13,14 @@
 	.global ym3526_0_W
 
 
-	.extern pauseEmulation
-
-
-;@----------------------------------------------------------------------------
-
 	.syntax unified
 	.arm
 
-	.section .text
+#ifdef GBA
+	.section .ewram, "ax", %progbits	;@ For the GBA
+#else
+	.section .text						;@ For anything else
+#endif
 	.align 2
 ;@----------------------------------------------------------------------------
 soundInit:
@@ -171,7 +171,12 @@ muteSoundGame:
 	.byte 0
 	.space 2
 
+#ifdef GBA
+	.section .sbss				;@ This is EWRAM on GBA with devkitARM
+#else
 	.section .bss
+#endif
+	.align 2
 ym3526_0:
 	.space ymSize
 freqTbl:
