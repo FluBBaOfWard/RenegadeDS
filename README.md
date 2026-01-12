@@ -5,12 +5,11 @@ No sound yet, you should still be able to enjoy the games though. =)
 
 ## How to use
 
-1. Create a folder named "acds" in either the root of your flash card or
- in the data folder. This is where settings and save files end up.
+1. Create a folder named "acds" in either the root of your flash card or in the
+ data folder (eg h:\data\acds). This is where settings and save files end up.
 2. Now put renegade.zip and/or kuniokun.zip into a folder where you have
  (arcade) roms, max 768 files per folder, filenames must not be longer than 127
  chars. You can use zip-files (as long as they use the deflate compression).
- CAUTION! Games that require SLOT-2 RAM can not be used with zip-files!
 3. Depending on your flashcart you might have to DLDI patch the emulator.
 
 When the emulator starts, you can either press L+R or tap on the screen to open

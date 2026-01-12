@@ -328,7 +328,11 @@ kuniokun_xor_table:				;@ len=0x2a
 	.byte 0xca, 0xd0, 0xed, 0x68, 0x85, 0x01, 0x68, 0xaa
 	.byte 0x68, 0x60
 ;@----------------------------------------------------------------------------
-//	.section .ewram,"ax"
+//#ifdef GBA
+//	.section .sbss				;@ This is EWRAM on GBA with devkitARM
+//#else
+//	.section .bss
+//#endif
 	.align 2
 ;@----------------------------------------------------------------------------
 mcu_encrypt_table:

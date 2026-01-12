@@ -58,6 +58,7 @@
 		9C9954872626050700CE2B94 /* YM3526.i */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c.preprocessed; path = YM3526.i; sourceTree = "<group>"; };
 		9C9954882626050700CE2B94 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		9C99548A2626050700CE2B94 /* History.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = History.txt; sourceTree = "<group>"; };
+		9CBE3EF92F0EFE3700A4A0FF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CBEE0DE26EE99100095347A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CBEE0DF26EE99680095347A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CBEE0E026EE99C50095347A /* EmuSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmuSettings.h; sourceTree = "<group>"; };
@@ -195,6 +196,7 @@
 			children = (
 				9C7BB9682600C9B500EA9C9C /* graphics */,
 				A47F095D2087BFC0004E1DA6 /* Unzip */,
+				9CBE3EF92F0EFE3700A4A0FF /* README.md */,
 				9C8F3400248ACB7600996E5A /* nds_asm.h */,
 				9CBEE0E026EE99C50095347A /* EmuSettings.h */,
 				9C11629A2AF7A567003C92C0 /* EmuMenu.i */,
