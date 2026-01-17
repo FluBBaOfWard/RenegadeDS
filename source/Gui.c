@@ -15,7 +15,7 @@
 #include "ARM6809/Version.h"
 #include "RenegadeVideo/Version.h"
 
-#define EMUVERSION "V0.1.1 2026-01-12"
+#define EMUVERSION "V0.1.1 2026-01-17"
 
 static void scalingSet(void);
 static const char *getScalingText(void);
@@ -136,7 +136,6 @@ char *const cabTxt[] = {"Cocktail", "Upright"};
 
 
 void setupGUI() {
-	emuSettings = AUTOPAUSE_EMULATION;
 	keysSetRepeat(25, 4);	// Delay, repeat.
 	menu1.itemCount = ARRSIZE(fileItems) - (enableExit?0:1);
 	openMenu();

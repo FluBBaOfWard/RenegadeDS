@@ -32,7 +32,8 @@ To select between the tabs use R & L or the touchscreen.
 ### Options
 
 * Controller:
-  * Autofire: Select if you want autofire.
+  * B Autofire: Select if you want autofire on button B.
+  * A Autofire: Select if you want autofire on button A.
   * Controller: 2P start a 2 player game.
   * Swap A/B: Swap which NDS button is mapped to which arcade button.
 * Display:
@@ -40,6 +41,8 @@ To select between the tabs use R & L or the touchscreen.
     * Unscaled mode:  L & R buttons scroll the screen up and down.
   * Scaling: Here you can select if you want flicker or barebones lineskip.
   * Gamma: Lets you change the gamma ("brightness").
+* Dipswitches:
+  * Lot of settings for the actual arcade game, difficulty/lives etc.
 * Settings:
   * Speed: Switch between speed modes.
     * Normal: Game runs at it's normal speed.
@@ -58,8 +61,6 @@ To select between the tabs use R & L or the touchscreen.
   * Disable Background: Turn on/off background rendering.
   * Disable Sprites: Turn on/off sprite rendering.
   * Step Frame: Emulate one frame.
-* Dipswitches:
-  * Lot of settings for the actual arcade game, difficulty/lives etc.
 
 ### About
 
